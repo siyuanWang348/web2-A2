@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Search Charity Events</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    nav a { margin-right: 15px; }
+    .event { border: 1px solid #ccc; padding: 10px; margin: 10px 0; border-radius: 5px; }
+    form { margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <h1>🔎 Search Events</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="search.html">Search Events</a>
+  </nav>
+
+  <form id="searchForm">
+    <label>Date: <input type="date" id="date"></label>
+    <label>Location: <input type="text" id="location"></label>
+    <label>Category:
+      <select id="category">
+        <option value="">--All--</option>
+      </select>
+    </label>
+    <button type="submit">Search</button>
+    <button type="button" onclick="clearFilters()">Clear</button>
+  </form>
+
+  <div id="results"></div>
+
+  <script>
+    // 加载类别
+    fetch('http://localhost:3001/api/categories')
+      .then(res => res.json())
+      .then(cats => {
+        const select = document.getElementById('category');
+        cats.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c.category_id;
+          opt.textContent = c.category_name;
+          select.appendChild(opt);
+        });
+      });
+
+    document.getElementById('searchForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const date = document.getElementById('date').value;
+      const loc = document.getElementById('location').value;
+      const cat = document.getElementById('category').value;
+
+      let url = 'http://localhost:3001/api/search?';
+      if (date) url += `date=${date}&`;
+      if (loc) url += `location=${loc}&`;
+      if (cat) url += `category_id=${cat}`;
+
+      fetch(url)
+        .then(res => res.json())
+        .then(events => {
+          const container = document.getElementById('results');
+          container.innerHTML = "";
+          if (events.length === 0) {
+            container.innerHTML = "<p>No matching events found.</p>";
+            return;
+          }
+          events.forEach(ev => {
+            const div = document.createElement('div');
+            div.className = "event";
+            div.innerHTML = `
+              <h3><a href="event.html?id=${ev.event_id}">${ev.title}</a></h3>
+              <p>📅 ${new Date(ev.event_date).toLocaleString()}</p>
+              <p>📍 ${ev.location}</p>
+              <p>🏷️ ${ev.category_name} | Org: ${ev.org_name}</p>
+            `;
+            container.appendChild(div);
+          });
+        });
+    });
+
+    function clearFilters() {
+      document.getElementById('date').value = "";
+      document.getElementById('location').value = "";
+      document.getElementById('category').value = "";
+      document.getElementById('results').innerHTML = "";
+    }
+  </script>
+</body>
+</html>

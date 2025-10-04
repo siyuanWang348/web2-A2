@@ -1,227 +1,258 @@
+/* 全局样式重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
 
-/* 全局样式 */
 body {
-  font-family: Arial, sans-serif;
-  margin: 30px;
-  background: #f9f9f9;
   line-height: 1.6;
-}
-
-h1 {
   color: #333;
-  margin-bottom: 20px;
+  background-color: #f9f7f3; /* 温暖的米白色背景 */
+  padding-bottom: 50px;
 }
 
-h2 {
-  color: #444;
-  margin-bottom: 15px;
+/* 导航栏 */
+.navbar {
+  background-color: #e67e22; /* 温暖的橙色作为主色调 */
+  color: white;
+  padding: 1rem 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* 导航菜单样式 */
-nav {
-  margin-bottom: 30px;
-  padding: 15px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-nav a {
-  margin-right: 20px;
-  text-decoration: none;
-  color: #007bff;
+.logo {
+  font-size: 1.5rem;
   font-weight: bold;
-  padding: 8px 15px;
-  border-radius: 5px;
-  transition: all 0.3s ease;
 }
 
-nav a:hover {
-  background-color: #007bff;
+.nav-links a {
   color: white;
   text-decoration: none;
+  margin-left: 2rem;
+  padding: 0.5rem 0;
+  border-bottom: 2px solid transparent;
 }
 
-nav a.active {
-  background-color: #0056b3;
-  color: white;
+.nav-links a:hover, .nav-links a.active {
+  border-bottom: 2px solid #27ae60; /* 绿色作为强调色 */
+}
+
+/* 头部图片 */
+.header-image {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  margin-bottom: 2rem;
+}
+
+/* 容器样式 */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 5%;
+}
+
+/* 标题样式 */
+h1, h2 {
+  color: #d35400; /* 深橙色标题 */
+  margin: 1.5rem 0;
+  border-bottom: 1px solid #e8c5a0; /* 浅橙色下划线 */
+  padding-bottom: 0.5rem;
+}
+
+/* 机构信息区域 */
+.org-info {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+  border-top: 4px solid #27ae60; /* 绿色顶部边框 */
+}
+
+.org-info p {
+  margin: 0.8rem 0;
+}
+
+/* 活动卡片样式 */
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.event-card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+  border-left: 4px solid #e67e22; /* 橙色左侧边框 */
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.event-card h3 {
+  color: #d35400; /* 深橙色标题 */
+  margin-bottom: 1rem;
+}
+
+.event-card p {
+  color: #666;
+  margin: 0.5rem 0;
 }
 
 /* 按钮样式 */
-button {
-  background-color: #007bff;
+.btn {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  background-color: #e67e22; /* 橙色按钮 */
   color: white;
   border: none;
-  padding: 10px 15px;
+  border-radius: 4px;
   cursor: pointer;
-  border-radius: 5px;
-  margin-right: 10px;
-  font-size: 14px;
+  text-decoration: none;
+  font-size: 1rem;
+  margin-top: 1rem;
   transition: background-color 0.3s ease;
 }
 
-button:hover {
-  background-color: #0056b3;
+.btn:hover {
+  background-color: #d35400; /* 深橙色悬停效果 */
 }
 
-.register-btn {
-  background-color: #28a745;
-}
-
-.register-btn:hover {
-  background-color: #218838;
-}
-
-.secondary-btn {
-  background-color: #6c757d;
-}
-
-.secondary-btn:hover {
-  background-color: #545b62;
-}
-
-/* 卡片和容器样式 */
-.card {
-  border: 1px solid #ccc;
-  padding: 20px;
-  border-radius: 10px;
-  background: white;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  margin-bottom: 20px;
-}
-
-.event {
-  border: 1px solid #ccc;
-  padding: 15px;
-  margin: 15px 0;
-  border-radius: 10px;
-  background: white;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  transition: transform 0.2s ease;
-}
-
-.event:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-.event h3 {
-  margin: 0 0 10px 0;
-  color: #333;
-}
-
-/* 链接样式 */
-a.details-link {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 8px 15px;
-  background-color: #007bff;
-  color: white;
-  border-radius: 5px;
-  text-decoration: none;
-  transition: background-color 0.3s ease;
-}
-
-a.details-link:hover {
-  background-color: #0056b3;
-  color: white;
-  text-decoration: none;
-}
-
-/* 表单样式 */
-form {
-  margin-bottom: 20px;
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+/* 搜索表单样式 */
+.search-form {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 1.5rem;
 }
 
-label {
+.form-group label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 0.5rem;
   font-weight: bold;
   color: #555;
 }
 
-input, select {
+.form-group input, .form-group select {
   width: 100%;
-  max-width: 300px;
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
 }
 
-input:focus, select:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+.form-buttons {
+  display: flex;
+  gap: 1rem;
 }
 
-/* 进度条样式 */
-.progress-container {
-  margin: 15px 0;
+.btn-search {
+  background-color: #27ae60; /* 绿色搜索按钮 */
+}
+
+.btn-search:hover {
+  background-color: #219653; /* 深绿色悬停效果 */
+}
+
+.btn-clear {
+  background-color: #95a5a6; /* 中性灰色清除按钮 */
+}
+
+.btn-clear:hover {
+  background-color: #7f8c8d;
+}
+
+/* 详情页样式 */
+.detail-card {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.detail-card p {
+  margin: 1rem 0;
+  line-height: 1.8;
 }
 
 .progress-bar {
-  width: 100%;
   height: 20px;
-  background-color: #e9ecef;
+  background-color: #f1f1f1;
   border-radius: 10px;
+  margin: 1rem 0;
   overflow: hidden;
 }
 
-.progress {
+.progress-fill {
   height: 100%;
-  background-color: #28a745;
-  border-radius: 10px;
-  text-align: center;
-  color: white;
-  line-height: 20px;
-  font-size: 12px;
-  transition: width 0.3s ease;
+  background-color: #27ae60; /* 绿色进度条 */
+  transition: width 1s ease-in-out;
 }
 
-/* 工具类 */
-.text-center {
-  text-align: center;
-}
-
-.text-muted {
-  color: #6c757d;
-}
-
-.mt-20 {
-  margin-top: 20px;
-}
-
-.mb-20 {
-  margin-bottom: 20px;
-}
-
-.hidden {
+/* 弹窗样式 */
+.modal {
   display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 1000;
 }
 
-.error-message {
-  color: #dc3545;
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  padding: 10px;
-  border-radius: 5px;
-  margin: 10px 0;
+.modal-content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 2rem;
+  width: 60%;
+  max-width: 500px;
+  border-radius: 8px;
+  position: relative;
+  border-top: 4px solid #e67e22; /* 橙色顶部边框 */
 }
 
-.success-message {
-  color: #155724;
-  background-color: #d4edda;
-  border: 1px solid #c3e6cb;
-  padding: 10px;
-  border-radius: 5px;
-  margin: 10px 0;
+.close-modal {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #e74c3c;
+}
+
+/* 错误提示样式 */
+.error {
+  color: #c0392b;
+  font-weight: bold;
+  padding: 1rem;
+  background-color: #fadbd8;
+  border-radius: 4px;
+  margin: 1rem 0;
+}
+
+/* 成功提示样式（新增） */
+.success {
+  color: #27ae60;
+  font-weight: bold;
+  padding: 1rem;
+  background-color: #d5f5e3;
+  border-radius: 4px;
+  margin: 1rem 0;
 }

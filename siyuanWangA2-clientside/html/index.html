@@ -3,76 +3,115 @@
 <head>
   <meta charset="UTF-8">
   <title>Charity Events - Home</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    nav a { margin-right: 15px; }
-    .event { 
-      border: 1px solid #ccc; 
-      padding: 15px; 
-      margin: 10px 0; 
-      border-radius: 8px; 
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .event h3 { margin: 0 0 5px; }
-    .event button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 14px;
-      margin-top: 8px;
-    }
-    .event button:hover {
-      background-color: #0056b3;
-    }
-  </style>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <h1>🌟 Welcome to Charity Events</h1>
-  <p>We connect you with meaningful charity events in your city. Join us to support education, healthcare, and the environment.</p>
-
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="search.html">Search Events</a>
+  <nav class="navbar">
+    <div class="logo">Charity Events</div>
+    <div class="nav-links">
+      <a href="/" class="active">Home</a>
+      <a href="/search">Search Events</a>
+    </div>
   </nav>
 
-  <h2>Upcoming Events</h2>
-  <div id="events"></div>
+  <div class="container">
+    <!-- 慈善组织基本信息 -->
+    <section class="organization-info">
+      <h1>🌟 Welcome to Charity Events</h1>
+      <p>We connect you with meaningful charity events in your city. Join us to support education, healthcare, and the environment.</p>
+      
+      <h2>Our Mission</h2>
+      <p>Our mission is to create a world where everyone can easily participate in charitable activities, fostering community spirit and driving positive social change through collective action.</p>
+      
+      <h2>Contact Us</h2>
+      <p>📧 Email: sherryWang@163.com </p>
+      <p>📞 Phone: 13113560313（Sherry's mobile phone number）</p>
+      <p>🏢 Address: Wenchang Campus of Guangxi University of Science and Technology</p>
+    </section>
+
+    <!-- 即将到来的活动列表 -->
+    <section class="events-section upcoming-events">
+      <h2>Upcoming Events</h2>
+      <div id="upcoming-events" class="events-grid"></div>
+    </section>
+
+    <!-- 过去的活动列表 -->
+    <section class="events-section past-events">
+      <h2>Past Charity Events</h2>
+      <div id="past-events" class="events-grid"></div>
+    </section>
+  </div>
 
   <script>
-  fetch('http://localhost:3001/api/events')
-    .then(res => res.json())
-    .then(events => {
-      const container = document.getElementById('events');
-      if (events.length === 0) {
-        container.innerHTML = "<p>No upcoming events.</p>";
-        return;
-      }
+    // 获取当前日期（不包含时间部分，用于比较）
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-      events.forEach(ev => {
-        const div = document.createElement('div');
-        div.className = "event";
-        div.innerHTML = `
-          <h3>${ev.title}</h3>
-          <p>📅 ${new Date(ev.event_date).toLocaleString()}</p>
-          <p>📍 ${ev.location}</p>
-          <p>🏷️ ${ev.category_name || 'Uncategorized'} | Organized by ${ev.org_name || 'Unknown Organization'}</p>
-          <button onclick="viewEvent(${ev.event_id})">🔍 View Details</button>
-        `;
-        container.appendChild(div);
+    fetch('http://localhost:3001/api/events')
+      .then(res => res.json())
+      .then(events => {
+        const upcomingContainer = document.getElementById('upcoming-events');
+        const pastContainer = document.getElementById('past-events');
+        
+        // 过滤掉违反政策的活动
+        const validEvents = events.filter(ev => !ev.is_violating_policy);
+        
+        // 分离即将到来和过去的活动
+        const upcomingEvents = [];
+        const pastEvents = [];
+        
+        validEvents.forEach(ev => {
+          // 解析活动日期（不包含时间部分）
+          const eventDate = new Date(ev.event_date);
+          eventDate.setHours(0, 0, 0, 0);
+          
+          // 根据日期将活动分类
+          if (eventDate < today) {
+            pastEvents.push(ev);
+          } else {
+            upcomingEvents.push(ev);
+          }
+        });
+
+        // 显示即将到来的活动
+        if (upcomingEvents.length === 0) {
+          upcomingContainer.innerHTML = "<p>No upcoming events available at this time.</p>";
+        } else {
+          upcomingEvents.forEach(ev => {
+            upcomingContainer.appendChild(createEventCard(ev, 'upcoming', 'Upcoming'));
+          });
+        }
+
+        // 显示过去的活动
+        if (pastEvents.length === 0) {
+          pastContainer.innerHTML = "<p>No past events recorded.</p>";
+        } else {
+          pastEvents.forEach(ev => {
+            pastContainer.appendChild(createEventCard(ev, 'past', 'Past'));
+          });
+        }
+      })
+      .catch(err => {
+        console.error("Error loading events:", err);
+        document.getElementById('upcoming-events').innerHTML = "<p>Error loading events. Please try again later.</p>";
+        document.getElementById('past-events').innerHTML = "<p>Error loading events. Please try again later.</p>";
       });
-    })
-    .catch(err => console.error("Error:", err));
 
-  function viewEvent(eventId) {
-    // 保存完整URL到sessionStorage，确保event.html可以获取参数
-    const fullUrl = `event.html?event_id=${eventId}`;
-    sessionStorage.setItem('originalEventUrl', window.location.origin + '/' + fullUrl);
-    console.log("Saving to sessionStorage:", window.location.origin + '/' + fullUrl);
-    window.location.href = fullUrl;
-  }
-</script>
-</body>
+    // 创建活动卡片的辅助函数
+    function createEventCard(event, status, statusText) {
+      const div = document.createElement('div');
+      div.className = `event-card ${status}`;
+      div.innerHTML = `
+        ${event.image_url ? `<img src="${event.image_url}" alt="${event.title}" class="event-image">` : ''}
+        <div class="event-status ${status}">${statusText}</div>
+        <h3>${event.title}</h3>
+        <p>📅 ${new Date(event.event_date).toLocaleString()}</p>
+        <p>📍 ${event.location}</p>
+        <p>🏷️ ${event.category_name || 'Uncategorized'} | Organized by ${event.org_name || 'Unknown Organization'}</p>
+        <a href="/event?event_id=${event.event_id}" class="btn">🔍 View Details</a>
+      `;
+      return div;
+    }
+    </script>
+</body> 
 </html>

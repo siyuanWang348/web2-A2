@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Event Details</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    nav a { margin-right: 15px; }
+    #eventDetails { margin-top: 20px; }
+    button { padding: 8px 12px; margin-top: 10px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>📌 Event Details</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="search.html">Search Events</a>
+  </nav>
+  <div id="eventDetails">Loading event...</div>
+
+  <script>
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+
+      if (!id) {
+        document.getElementById('eventDetails').innerHTML = "<p>❌ No event ID provided. Redirecting to home...</p>";
+        console.warn("No event ID in URL. Redirecting...");
+        setTimeout(() => window.location.href = "index.html", 3000);
+        return;
+      }
+
+      fetch(`http://localhost:3001/api/events/${id}`)
+        .then(res => {
+          if (!res.ok) throw new Error("Event not found");
+          return res.json();
+        })
+        .then(ev => {
+          const container = document.getElementById('eventDetails');
+          container.innerHTML = `
+            <h2>${ev.title}</h2>
+            <p><strong>Date:</strong> ${new Date(ev.event_date).toLocaleString()}</p>
+            <p><strong>Location:</strong> ${ev.location}</p>
+            <p><strong>Category:</strong> ${ev.category_name || 'N/A'}</p>
+            <p><strong>Organization:</strong> ${ev.org_name || 'N/A'}</p>
+            <p><strong>Contact:</strong> ${ev.contact_email || 'N/A'}, ${ev.contact_phone || 'N/A'}</p>
+            <p><strong>Description:</strong> ${ev.description || 'No description available.'}</p>
+            <p><strong>Ticket Price:</strong> $${ev.ticket_price !== null ? ev.ticket_price : '0.00'}</p>
+            <p><strong>Goal:</strong> $${ev.charity_goal !== null ? ev.charity_goal : '0.00'} | <strong>Progress:</strong> $${ev.current_progress !== null ? ev.current_progress : '0.00'}</p>
+            <button onclick="alert('This feature is currently under construction.')">Register</button>
+          `;
+        })
+        .catch(err => {
+          console.error(err);
+          document.getElementById('eventDetails').innerHTML = "<p>❌ Event not found.</p>";
+        });
+    })();
+  </script>
+</body>
+</html>

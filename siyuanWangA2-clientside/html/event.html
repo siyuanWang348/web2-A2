@@ -5,9 +5,8 @@
   <title>Event Details</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
-    nav a { margin-right: 15px; }
-    #eventDetails { margin-top: 20px; }
-    button { padding: 8px 12px; margin-top: 10px; cursor: pointer; }
+    nav a { margin-right: 10px; }
+    #manualIdEntry { margin: 20px 0; padding: 10px; background-color: #f0f0f0; border-radius: 5px; }
   </style>
 </head>
 <body>
@@ -16,45 +15,152 @@
     <a href="index.html">Home</a>
     <a href="search.html">Search Events</a>
   </nav>
-  <div id="eventDetails">Loading event...</div>
+  
+  <div id="manualIdEntry">
+    <p><strong>Debug Tool:</strong> If event details don't load automatically, enter event ID manually:</p>
+    <input type="number" id="manualId" placeholder="Enter event ID">
+    <button onclick="loadEventWithId()">Load Event</button>
+  </div>
+  
+  <div id="eventDetails"></div>
 
   <script>
-    (function() {
-      const params = new URLSearchParams(window.location.search);
-      const id = params.get('id');
-
-      if (!id) {
-        document.getElementById('eventDetails').innerHTML = "<p>❌ No event ID provided. Redirecting to home...</p>";
-        console.warn("No event ID in URL. Redirecting...");
-        setTimeout(() => window.location.href = "index.html", 3000);
-        return;
+    // 手动加载事件的函数
+    function loadEventWithId() {
+      const manualId = document.getElementById('manualId').value;
+      if (manualId && !isNaN(manualId)) {
+        loadEventDetails(manualId);
+      } else {
+        alert('Please enter a valid event ID');
       }
-
-      fetch(`http://localhost:3001/api/events/${id}`)
+    }
+    
+    // 加载事件详情的主要函数
+    function loadEventDetails(eventId) {
+      fetch(`http://localhost:3001/api/events/${eventId}`)
         .then(res => {
-          if (!res.ok) throw new Error("Event not found");
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
           return res.json();
         })
         .then(ev => {
+          // 隐藏手动输入区域
+          document.getElementById('manualIdEntry').style.display = 'none';
+          
           const container = document.getElementById('eventDetails');
           container.innerHTML = `
-            <h2>${ev.title}</h2>
-            <p><strong>Date:</strong> ${new Date(ev.event_date).toLocaleString()}</p>
-            <p><strong>Location:</strong> ${ev.location}</p>
+            <h2>${ev.title || 'N/A'}</h2>
+            <p><strong>Date:</strong> ${ev.event_date ? new Date(ev.event_date).toLocaleString() : 'N/A'}</p>
+            <p><strong>Location:</strong> ${ev.location || 'N/A'}</p>
             <p><strong>Category:</strong> ${ev.category_name || 'N/A'}</p>
             <p><strong>Organization:</strong> ${ev.org_name || 'N/A'}</p>
             <p><strong>Contact:</strong> ${ev.contact_email || 'N/A'}, ${ev.contact_phone || 'N/A'}</p>
-            <p><strong>Description:</strong> ${ev.description || 'No description available.'}</p>
-            <p><strong>Ticket Price:</strong> $${ev.ticket_price !== null ? ev.ticket_price : '0.00'}</p>
-            <p><strong>Goal:</strong> $${ev.charity_goal !== null ? ev.charity_goal : '0.00'} | <strong>Progress:</strong> $${ev.current_progress !== null ? ev.current_progress : '0.00'}</p>
+            <p><strong>Description:</strong> ${ev.description || 'N/A'}</p>
+            <p><strong>Ticket Price:</strong> $${ev.ticket_price !== undefined ? ev.ticket_price : 'N/A'}</p>
+            <p><strong>Goal:</strong> $${ev.charity_goal !== undefined ? ev.charity_goal : 'N/A'} | <strong>Progress:</strong> $${ev.current_progress !== undefined ? ev.current_progress : 'N/A'}</p>
             <button onclick="alert('This feature is currently under construction.')">Register</button>
           `;
         })
         .catch(err => {
-          console.error(err);
-          document.getElementById('eventDetails').innerHTML = "<p>❌ Event not found.</p>";
+          document.getElementById('eventDetails').innerHTML = `
+            <p>Error loading event. Please check the console for details.</p>
+            <p><a href="index.html">Go back to Home</a></p>
+          `;
+          console.error("Error:", err);
         });
-    })();
+    }
+    
+    // 从 URL 获取 event_id
+    function getEventId() {
+      // 输出调试信息
+      console.log("=== Event ID Extraction Debug Info ===");
+      console.log("Current URL:", window.location.href);
+      console.log("Window location origin:", window.location.origin);
+      console.log("Window location pathname:", window.location.pathname);
+      console.log("Window location search:", window.location.search);
+      console.log("Window location hash:", window.location.hash);
+      
+      // 从sessionStorage获取原始URL（由跳转页面保存）
+      const originalUrl = sessionStorage.getItem('originalEventUrl');
+      console.log("Original URL from sessionStorage:", originalUrl);
+      
+      let id = null;
+      
+      // 如果sessionStorage中有原始URL，则从中提取参数
+      if (originalUrl) {
+        try {
+          const urlObj = new URL(originalUrl);
+          const params = new URLSearchParams(urlObj.search);
+          id = params.get('event_id') || params.get('id');
+          console.log("ID from sessionStorage URL params:", id);
+        } catch (e) {
+          console.log("Could not parse URL from sessionStorage:", e.message);
+        }
+      }
+      
+      // 如果sessionStorage中没有，尝试从当前URL获取
+      if (!id) {
+        try {
+          const urlObj = new URL(window.location.href);
+          const params = new URLSearchParams(urlObj.search);
+          id = params.get('event_id') || params.get('id');
+          console.log("ID from current URL params:", id);
+        } catch (e) {
+          console.log("Could not parse current URL:", e.message);
+        }
+      }
+      
+      // 如果查询参数中没有，尝试从路径中获取
+      if (!id) {
+        // 尝试从路径中提取数字ID (如 /event/123)
+        const pathMatch = window.location.pathname.match(/\/event\/(\d+)$/);
+        if (pathMatch) {
+          id = pathMatch[1];
+          console.log("ID from path pattern:", id);
+        }
+      }
+      
+      // 如果还是没有，尝试从hash中获取
+      if (!id) {
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        id = hashParams.get('event_id') || hashParams.get('id');
+        console.log("ID from hash:", id);
+      }
+      
+      // 最后的尝试：检查是否有任何数字出现在路径中
+      if (!id) {
+        const pathMatch = window.location.pathname.match(/(\d+)/);
+        if (pathMatch) {
+          id = pathMatch[1];
+          console.log("ID from any number in path:", id);
+        }
+      }
+      
+      // 确保ID是数字
+      if (id && (isNaN(id) || id.trim() === '')) {
+        console.warn("Event ID is not a valid number:", id);
+        return null;
+      }
+      
+      console.log("Final ID to use:", id);
+      console.log("=====================================");
+      return id;
+    }
+    
+    // 页面加载完成后自动尝试获取事件ID并加载详情
+    const id = getEventId();
+    
+    if (!id) {
+      document.getElementById('eventDetails').innerHTML = `
+        <p>Error: No valid event ID provided.</p>
+        <p>Please make sure you accessed this page from a valid event link.</p>
+        <p>Alternatively, use the debug tool above to manually enter an event ID.</p>
+      `;
+      console.error("No valid event ID found in URL");
+    } else {
+      loadEventDetails(id);
+    }
   </script>
 </body>
 </html>

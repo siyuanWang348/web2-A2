@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 /**
- * 1️⃣ 首页事件列表（只显示未过期 & is_active=1 的活动）
+ * 1. 首页事件列表（只显示未过期 & is_active=1 的活动）
  */
 app.get('/api/events', (req, res) => {
   const sql = `
@@ -23,7 +23,7 @@ app.get('/api/events', (req, res) => {
   `;
   db.query(sql, (err, results) => {
     if (err) {
-      console.error("❌ Database query error:", err);
+      console.error(err);
       res.status(500).send('Database query error');
       return;
     }
@@ -32,14 +32,9 @@ app.get('/api/events', (req, res) => {
 });
 
 /**
- * 2️⃣ 活动详情页
+ * 2. 活动详情页
  */
 app.get('/api/events/:id', (req, res) => {
-  const eventId = req.params.id;
-  if (!eventId) {
-    return res.status(400).json({ error: "Event ID required" });
-  }
-
   const sql = `
     SELECT e.*, c.category_name, o.org_name, o.contact_email, o.contact_phone, o.website
     FROM charity_events e
@@ -47,15 +42,13 @@ app.get('/api/events/:id', (req, res) => {
     LEFT JOIN charity_organizations o ON e.org_id = o.org_id
     WHERE e.event_id = ?
   `;
-
-  db.query(sql, [eventId], (err, results) => {
+  db.query(sql, [req.params.id], (err, results) => {
     if (err) {
-      console.error("❌ Database query error:", err);
+      console.error(err);
       res.status(500).send('Database query error');
       return;
     }
     if (results.length === 0) {
-      console.warn(`⚠️ Event not found for ID ${eventId}`);
       res.status(404).send('Event not found');
       return;
     }
@@ -64,13 +57,13 @@ app.get('/api/events/:id', (req, res) => {
 });
 
 /**
- * 3️⃣ 获取所有类别
+ * 3. 获取所有类别
  */
 app.get('/api/categories', (req, res) => {
   const sql = "SELECT * FROM event_categories";
   db.query(sql, (err, results) => {
     if (err) {
-      console.error("❌ Database query error:", err);
+      console.error(err);
       res.status(500).send('Database query error');
       return;
     }
@@ -79,7 +72,8 @@ app.get('/api/categories', (req, res) => {
 });
 
 /**
- * 4️⃣ 搜索活动（支持日期 / 地点 / 类别）
+ * 4. 搜索活动
+ * 支持：日期 / 地点 / 类别
  */
 app.get('/api/search', (req, res) => {
   let sql = `
@@ -109,7 +103,7 @@ app.get('/api/search', (req, res) => {
 
   db.query(sql, params, (err, results) => {
     if (err) {
-      console.error("❌ Database query error:", err);
+      console.error(err);
       res.status(500).send('Database query error');
       return;
     }

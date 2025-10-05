@@ -14,13 +14,13 @@
     </div>
   </nav>
 
-  <div class="container">
+  <div class="container event-page">
     <h1>📌 Event Details</h1>
 
-    <div id="manualIdEntry">
+    <div id="manualIdEntry" class="manual-entry">
       <p><strong>Debug Tool:</strong> If event details don't load automatically, enter event ID manually:</p>
       <input type="number" id="manualId" placeholder="Enter event ID">
-      <button onclick="loadEventWithId()">Load Event</button>
+      <button class="btn secondary" onclick="loadEventWithId()">Load Event</button>
     </div>
   
     <div id="eventDetails" class="detail-card"></div>
@@ -45,24 +45,29 @@
         .then(ev => {
           document.getElementById('manualIdEntry').style.display = 'none';
           const container = document.getElementById('eventDetails');
-          // 计算进度百分比
           const progressPercent = ev.charity_goal 
             ? Math.min(Math.round((ev.current_progress / ev.charity_goal) * 100), 100) 
             : 0;
           container.innerHTML = `
-            <h2>${ev.title || 'N/A'}</h2>
-            <p><strong>Date:</strong> ${ev.event_date ? new Date(ev.event_date).toLocaleString() : 'N/A'}</p>
-            <p><strong>Location:</strong> ${ev.location || 'N/A'}</p>
-            <p><strong>Category:</strong> ${ev.category_name || 'N/A'}</p>
-            <p><strong>Organization:</strong> ${ev.org_name || 'N/A'}</p>
-            <p><strong>Contact:</strong> ${ev.contact_email || 'N/A'}, ${ev.contact_phone || 'N/A'}</p>
-            <p><strong>Description:</strong> ${ev.description || 'N/A'}</p>
-            <p><strong>Ticket Price:</strong> $${ev.ticket_price ?? 'N/A'}</p>
-            <p><strong>Goal:</strong> $${ev.charity_goal ?? 'N/A'} | <strong>Progress:</strong> $${ev.current_progress ?? 'N/A'}</p>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: ${progressPercent}%"></div>
+            <div class="event-card">
+              <h2>${ev.title || 'N/A'}</h2>
+              <div class="event-info">
+                <p><strong>Date:</strong> ${ev.event_date ? new Date(ev.event_date).toLocaleString() : 'N/A'}</p>
+                <p><strong>Location:</strong> ${ev.location || 'N/A'}</p>
+                <p><strong>Category:</strong> ${ev.category_name || 'N/A'}</p>
+                <p><strong>Organization:</strong> ${ev.org_name || 'N/A'}</p>
+                <p><strong>Contact:</strong> ${ev.contact_email || 'N/A'}, ${ev.contact_phone || 'N/A'}</p>
+              </div>
+              <p class="desc">${ev.description || 'N/A'}</p>
+              <div class="goal-section">
+                <p><strong>🎯 Goal:</strong> $${ev.charity_goal ?? 'N/A'} | <strong>Progress:</strong> $${ev.current_progress ?? 'N/A'}</p>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: ${progressPercent}%"></div>
+                </div>
+              </div>
+              <p><strong>Ticket Price:</strong> $${ev.ticket_price ?? 'N/A'}</p>
+              <button class="btn primary" onclick="alert('Registration feature under development.')">Register</button>
             </div>
-            <button class="btn" onclick="alert('Registration feature under development.')">Register</button>
           `;
         })
         .catch(err => {

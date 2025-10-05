@@ -2,116 +2,183 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Charity Events - Home</title>
+  <!-- 保留原有样式引用 -->
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/carousel.css">
+  <link rel="stylesheet" href="/css/theme.css">
 </head>
+
 <body>
+  <!-- 顶部导航 -->
   <nav class="navbar">
-    <div class="logo">Charity Events</div>
+    <div class="logo">🌍 Charity Events</div>
     <div class="nav-links">
       <a href="/" class="active">Home</a>
       <a href="/search">Search Events</a>
     </div>
   </nav>
 
-  <div class="container">
-    <!-- 慈善组织基本信息 -->
-    <section class="organization-info">
-      <h1>🌟 Welcome to Charity Events</h1>
-      <p>We connect you with meaningful charity events in your city. Join us to support education, healthcare, and the environment.</p>
-      
+  <!-- 轮播图 -->
+  <section class="carousel-container">
+    <div class="carousel-slides">
+      <div class="carousel-slide">
+        <img src="/images/1.jpg" alt="Charity event 1">
+        <div class="carousel-caption">
+          <h2>Join Hands for a Better World</h2>
+          <p>Together, we can make a difference.</p>
+        </div>
+      </div>
+      <div class="carousel-slide">
+        <img src="/images/2.jpg" alt="Charity event 2">
+        <div class="carousel-caption">
+          <h2>Support Education & Hope</h2>
+          <p>Help children access quality learning opportunities.</p>
+        </div>
+      </div>
+      <div class="carousel-slide">
+        <img src="/images/3.jpg" alt="Charity event 3">
+        <div class="carousel-caption">
+          <h2>Act for a Greener Planet</h2>
+          <p>Join local events that protect our environment.</p>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control prev">❮</button>
+    <button class="carousel-control next">❯</button>
+    <div class="carousel-indicators">
+      <div class="indicator active" data-index="0"></div>
+      <div class="indicator" data-index="1"></div>
+      <div class="indicator" data-index="2"></div>
+    </div>
+  </section>
+
+  <main class="container">
+    <!-- 关于我们 -->
+    <section class="org-info">
+      <h1>Welcome to Charity Events</h1>
+      <p>
+        We connect you with meaningful charity events in your city.  
+        Join us to support education, healthcare, and the environment.
+      </p>
+
       <h2>Our Mission</h2>
-      <p>Our mission is to create a world where everyone can easily participate in charitable activities, fostering community spirit and driving positive social change through collective action.</p>
-      
+      <p>
+        Our mission is to create a world where everyone can easily participate in charitable
+        activities — fostering community spirit and driving positive social change.
+      </p>
+
       <h2>Contact Us</h2>
-      <p>📧 Email: sherryWang@163.com </p>
-      <p>📞 Phone: 13113560313（Sherry's mobile phone number）</p>
-      <p>🏢 Address: Wenchang Campus of Guangxi University of Science and Technology</p>
+      <p>📧 <strong>Email:</strong> sherryWang@163.com</p>
+      <p>📞 <strong>Phone:</strong> 13113560313</p>
+      <p>🏢 <strong>Address:</strong> Wenchang Campus of Guangxi University of Science and Technology</p>
     </section>
 
-    <!-- 即将到来的活动列表 -->
+    <!-- 即将到来的活动 -->
     <section class="events-section upcoming-events">
-      <h2>Upcoming Events</h2>
+      <h2>🌈 Upcoming Events</h2>
+      <p>Discover upcoming charity events and make an impact today!</p>
       <div id="upcoming-events" class="events-grid"></div>
     </section>
 
-    <!-- 过去的活动列表 -->
+    <!-- 过去的活动 -->
     <section class="events-section past-events">
-      <h2>Past Charity Events</h2>
+      <h2>🌿 Past Charity Events</h2>
+      <p>See what we’ve accomplished together in the past.</p>
       <div id="past-events" class="events-grid"></div>
     </section>
-  </div>
+  </main>
 
+  <footer style="text-align:center; padding:2rem 0; color:#888;">
+    © 2025 Charity Events | Made with ❤️ to make the world better
+  </footer>
+
+  <!-- JavaScript 保持不变 -->
   <script>
-    // 获取当前日期（不包含时间部分，用于比较）
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    document.addEventListener('DOMContentLoaded', function() {
+      const slidesContainer = document.querySelector('.carousel-slides');
+      const slides = document.querySelectorAll('.carousel-slide');
+      const prevBtn = document.querySelector('.prev');
+      const nextBtn = document.querySelector('.next');
+      const indicators = document.querySelectorAll('.indicator');
+      let currentIndex = 0;
+      let slideInterval;
 
-    fetch('http://localhost:3001/api/events')
-      .then(res => res.json())
-      .then(events => {
-        const upcomingContainer = document.getElementById('upcoming-events');
-        const pastContainer = document.getElementById('past-events');
-        
-        // 过滤掉违反政策的活动
-        const validEvents = events.filter(ev => !ev.is_violating_policy);
-        
-        // 分离即将到来和过去的活动
-        const upcomingEvents = [];
-        const pastEvents = [];
-        
-        validEvents.forEach(ev => {
-          // 解析活动日期（不包含时间部分）
-          const eventDate = new Date(ev.event_date);
-          eventDate.setHours(0, 0, 0, 0);
-          
-          // 根据日期将活动分类
-          if (eventDate < today) {
-            pastEvents.push(ev);
-          } else {
-            upcomingEvents.push(ev);
-          }
+      function initCarousel() {
+        showSlide(currentIndex);
+        startSlideInterval();
+        prevBtn.addEventListener('click', showPrevSlide);
+        nextBtn.addEventListener('click', showNextSlide);
+        indicators.forEach(indicator => {
+          indicator.addEventListener('click', () => {
+            currentIndex = parseInt(indicator.dataset.index);
+            showSlide(currentIndex);
+            resetSlideInterval();
+          });
+        });
+        slidesContainer.addEventListener('mouseenter', stopSlideInterval);
+        slidesContainer.addEventListener('mouseleave', startSlideInterval);
+      }
+
+      function showSlide(index) {
+        if (index < 0) currentIndex = slides.length - 1;
+        else if (index >= slides.length) currentIndex = 0;
+        else currentIndex = index;
+        slidesContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+        indicators.forEach((indicator, i) => {
+          indicator.classList.toggle('active', i === currentIndex);
+        });
+      }
+
+      function showPrevSlide() { showSlide(currentIndex - 1); resetSlideInterval(); }
+      function showNextSlide() { showSlide(currentIndex + 1); resetSlideInterval(); }
+      function startSlideInterval() { slideInterval = setInterval(showNextSlide, 5000); }
+      function stopSlideInterval() { clearInterval(slideInterval); }
+      function resetSlideInterval() { stopSlideInterval(); startSlideInterval(); }
+
+      initCarousel();
+
+      // 加载活动列表
+      const today = new Date();
+      today.setHours(0,0,0,0);
+
+      fetch('http://localhost:3001/api/events')
+        .then(res => res.json())
+        .then(events => {
+          const upcoming = document.getElementById('upcoming-events');
+          const past = document.getElementById('past-events');
+          const validEvents = events.filter(ev => !ev.is_violating_policy);
+          const upcomingEvents = [], pastEvents = [];
+          validEvents.forEach(ev => {
+            const date = new Date(ev.event_date);
+            date.setHours(0,0,0,0);
+            (date < today ? pastEvents : upcomingEvents).push(ev);
+          });
+          upcoming.innerHTML = upcomingEvents.length ? '' : "<p>No upcoming events available.</p>";
+          past.innerHTML = pastEvents.length ? '' : "<p>No past events recorded.</p>";
+          upcomingEvents.forEach(ev => upcoming.appendChild(createEventCard(ev, 'upcoming', 'Upcoming')));
+          pastEvents.forEach(ev => past.appendChild(createEventCard(ev, 'past', 'Past')));
+        })
+        .catch(err => {
+          console.error("Error loading events:", err);
         });
 
-        // 显示即将到来的活动
-        if (upcomingEvents.length === 0) {
-          upcomingContainer.innerHTML = "<p>No upcoming events available at this time.</p>";
-        } else {
-          upcomingEvents.forEach(ev => {
-            upcomingContainer.appendChild(createEventCard(ev, 'upcoming', 'Upcoming'));
-          });
-        }
-
-        // 显示过去的活动
-        if (pastEvents.length === 0) {
-          pastContainer.innerHTML = "<p>No past events recorded.</p>";
-        } else {
-          pastEvents.forEach(ev => {
-            pastContainer.appendChild(createEventCard(ev, 'past', 'Past'));
-          });
-        }
-      })
-      .catch(err => {
-        console.error("Error loading events:", err);
-        document.getElementById('upcoming-events').innerHTML = "<p>Error loading events. Please try again later.</p>";
-        document.getElementById('past-events').innerHTML = "<p>Error loading events. Please try again later.</p>";
-      });
-
-    // 创建活动卡片的辅助函数
-    function createEventCard(event, status, statusText) {
-      const div = document.createElement('div');
-      div.className = `event-card ${status}`;
-      div.innerHTML = `
-        ${event.image_url ? `<img src="${event.image_url}" alt="${event.title}" class="event-image">` : ''}
-        <div class="event-status ${status}">${statusText}</div>
-        <h3>${event.title}</h3>
-        <p>📅 ${new Date(event.event_date).toLocaleString()}</p>
-        <p>📍 ${event.location}</p>
-        <p>🏷️ ${event.category_name || 'Uncategorized'} | Organized by ${event.org_name || 'Unknown Organization'}</p>
-        <a href="/event?event_id=${event.event_id}" class="btn">🔍 View Details</a>
-      `;
-      return div;
-    }
-    </script>
-</body> 
+      function createEventCard(event, status, statusText) {
+        const div = document.createElement('div');
+        div.className = `event-card ${status}`;
+        div.innerHTML = `
+          ${event.image_url ? `<img src="${event.image_url}" alt="${event.title}" class="event-image">` : ''}
+          <div class="event-status ${status}">${statusText}</div>
+          <h3>${event.title}</h3>
+          <p>📅 ${new Date(event.event_date).toLocaleString()}</p>
+          <p>📍 ${event.location}</p>
+          <p>🏷️ ${event.category_name || 'Uncategorized'} | Organized by ${event.org_name || 'Unknown Organization'}</p>
+          <a href="/event?event_id=${event.event_id}" class="btn">🔍 View Details</a>
+        `;
+        return div;
+      }
+    });
+  </script>
+</body>
 </html>

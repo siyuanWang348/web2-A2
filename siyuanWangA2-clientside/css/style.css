@@ -8,14 +8,14 @@
 
 body {
   line-height: 1.6;
-  color: #333;
-  background-color: #f9f7f3; /* 温暖的米白色背景 */
+  color: #2c3e50;
+  background-color: #f4f7fb; /* 柔和浅蓝背景 */
   padding-bottom: 50px;
 }
 
 /* 导航栏 */
 .navbar {
-  background-color: #e67e22; /* 温暖的橙色作为主色调 */
+  background-color: #3498db; /* 蓝色主色调 */
   color: white;
   padding: 1rem 5%;
   display: flex;
@@ -38,7 +38,7 @@ body {
 }
 
 .nav-links a:hover, .nav-links a.active {
-  border-bottom: 2px solid #27ae60; /* 绿色作为强调色 */
+  border-bottom: 2px solid #2ecc71; /* 绿色强调色 */
 }
 
 /* 头部图片 */
@@ -58,9 +58,9 @@ body {
 
 /* 标题样式 */
 h1, h2 {
-  color: #d35400; /* 深橙色标题 */
+  color: #2c3e50; /* 深蓝灰标题 */
   margin: 1.5rem 0;
-  border-bottom: 1px solid #e8c5a0; /* 浅橙色下划线 */
+  border-bottom: 1px solid #d6eaf8; /* 浅蓝下划线 */
   padding-bottom: 0.5rem;
 }
 
@@ -71,7 +71,7 @@ h1, h2 {
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   margin-bottom: 2rem;
-  border-top: 4px solid #27ae60; /* 绿色顶部边框 */
+  border-top: 4px solid #2ecc71; /* 绿色顶部边框 */
 }
 
 .org-info p {
@@ -92,7 +92,7 @@ h1, h2 {
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   transition: transform 0.3s ease;
-  border-left: 4px solid #e67e22; /* 橙色左侧边框 */
+  border-left: 4px solid #3498db; /* 蓝色左侧边框 */
 }
 
 .event-card:hover {
@@ -101,12 +101,12 @@ h1, h2 {
 }
 
 .event-card h3 {
-  color: #d35400; /* 深橙色标题 */
+  color: #2c3e50;
   margin-bottom: 1rem;
 }
 
 .event-card p {
-  color: #666;
+  color: #555;
   margin: 0.5rem 0;
 }
 
@@ -114,7 +114,7 @@ h1, h2 {
 .btn {
   display: inline-block;
   padding: 0.6rem 1.2rem;
-  background-color: #e67e22; /* 橙色按钮 */
+  background-color: #3498db; /* 蓝色按钮 */
   color: white;
   border: none;
   border-radius: 4px;
@@ -126,7 +126,7 @@ h1, h2 {
 }
 
 .btn:hover {
-  background-color: #d35400; /* 深橙色悬停效果 */
+  background-color: #2980b9; /* 深蓝悬停效果 */
 }
 
 /* 搜索表单样式 */
@@ -146,7 +146,7 @@ h1, h2 {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: bold;
-  color: #555;
+  color: #34495e;
 }
 
 .form-group input, .form-group select {
@@ -163,15 +163,15 @@ h1, h2 {
 }
 
 .btn-search {
-  background-color: #27ae60; /* 绿色搜索按钮 */
+  background-color: #2ecc71; /* 绿色搜索按钮 */
 }
 
 .btn-search:hover {
-  background-color: #219653; /* 深绿色悬停效果 */
+  background-color: #27ae60;
 }
 
 .btn-clear {
-  background-color: #95a5a6; /* 中性灰色清除按钮 */
+  background-color: #95a5a6; /* 灰色清除按钮 */
 }
 
 .btn-clear:hover {
@@ -193,7 +193,7 @@ h1, h2 {
 
 .progress-bar {
   height: 20px;
-  background-color: #f1f1f1;
+  background-color: #ecf0f1;
   border-radius: 10px;
   margin: 1rem 0;
   overflow: hidden;
@@ -201,7 +201,7 @@ h1, h2 {
 
 .progress-fill {
   height: 100%;
-  background-color: #27ae60; /* 绿色进度条 */
+  background-color: #2ecc71; /* 绿色进度条 */
   transition: width 1s ease-in-out;
 }
 
@@ -225,7 +225,7 @@ h1, h2 {
   max-width: 500px;
   border-radius: 8px;
   position: relative;
-  border-top: 4px solid #e67e22; /* 橙色顶部边框 */
+  border-top: 4px solid #3498db; /* 蓝色顶部边框 */
 }
 
 .close-modal {
@@ -239,7 +239,7 @@ h1, h2 {
 
 /* 错误提示样式 */
 .error {
-  color: #c0392b;
+  color: #e74c3c;
   font-weight: bold;
   padding: 1rem;
   background-color: #fadbd8;
@@ -247,12 +247,12 @@ h1, h2 {
   margin: 1rem 0;
 }
 
-/* 成功提示样式（新增） */
+/* 成功提示样式 */
 .success {
   color: #27ae60;
   font-weight: bold;
   padding: 1rem;
-  background-color: #d5f5e3;
+  background-color: #d4efdf;
   border-radius: 4px;
   margin: 1rem 0;
 }

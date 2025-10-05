@@ -10,6 +10,7 @@ const PORT = 3000;
 app.use(express.static(path.join(__dirname, 'html')));
 app.use('/css', express.static(path.join(__dirname, 'css')));
 app.use('/js', express.static(path.join(__dirname, 'js')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // ✅ 首页
 app.get('/', (req, res) => {

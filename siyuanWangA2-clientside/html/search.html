@@ -2,154 +2,63 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Search Charity Events</title>
+  <link rel="stylesheet" href="/css/search.css">
   <link rel="stylesheet" href="/css/style.css">
-  <style>
-    /* 自定义日历弹窗样式 */
-    input[type="date"] {
-      padding: 8px 12px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 14px;
-      background-color: #fff;
-      cursor: pointer;
-      font-family: inherit;
-    }
-
-    /* 调整日历内部元素样式，使其更符合页面设计 */
-    input[type="date"]::-webkit-calendar-picker-indicator {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E");
-      padding: 2px;
-    }
-
-    input[type="date"]::-webkit-datetime-edit-text {
-      padding: 0 4px;
-    }
-
-    input[type="date"]::-webkit-datetime-edit-month-field,
-    input[type="date"]::-webkit-datetime-edit-day-field,
-    input[type="date"]::-webkit-datetime-edit-year-field {
-      font-weight: 500;
-      color: #333;
-    }
-
-    /* 统一结果中日期显示样式 */
-    .event-date {
-      color: #555;
-      font-size: 14px;
-    }
-  </style>
+  <link rel="stylesheet" href="/css/theme.css">
 </head>
 <body>
+  <!-- 导航栏 -->
   <nav class="navbar">
-    <div class="logo">Charity Events</div>
+    <div class="logo">🌍 Charity Events</div>
     <div class="nav-links">
       <a href="/">Home</a>
       <a href="/search" class="active">Search Events</a>
     </div>
   </nav>
 
+  <!-- 主内容区 -->
   <div class="container">
     <h1>🔎 Search Events</h1>
 
+    <!-- 搜索表单 -->
     <form id="searchForm" class="search-form">
       <div class="form-group">
-        <!-- 添加lang属性确保日历弹窗为英文 -->
-        <label>Date: <input type="date" id="date" lang="en"></label>
+        <label>
+          Date: 
+          <input type="date" id="date" lang="en">
+        </label>
       </div>
+      
       <div class="form-group">
-        <label>Location: <input type="text" id="location" placeholder="Enter location"></label>
+        <label>
+          Location: 
+          <input type="text" id="location" placeholder="Enter location">
+        </label>
       </div>
+      
       <div class="form-group">
-        <label>Category: 
+        <label>
+          Category: 
           <select id="category">
             <option value="">-- All --</option>
           </select>
         </label>
       </div>
+      
       <div class="form-buttons">
         <button type="submit" class="btn btn-search">Search</button>
         <button type="button" class="btn btn-clear" onclick="clearFilters()">Clear</button>
       </div>
     </form>
 
+    <!-- 搜索结果区域 -->
     <h2>Results</h2>
     <div id="results" class="events-grid"></div>
   </div>
 
-  <script>
-    // 加载类别列表
-    fetch('http://localhost:3001/api/categories')
-      .then(res => res.json())
-      .then(data => {
-        const select = document.getElementById('category');
-        data.forEach(cat => {
-          const option = document.createElement('option');
-          option.value = cat.category_id;
-          option.textContent = cat.category_name;
-          select.appendChild(option);
-        });
-      });
-
-    // 搜索表单提交
-    document.getElementById('searchForm').addEventListener('submit', e => {
-      e.preventDefault();
-      const date = document.getElementById('date').value;
-      const location = document.getElementById('location').value;
-      const category = document.getElementById('category').value;
-
-      let url = 'http://localhost:3001/api/search?';
-      const params = [];
-      if (date) params.push(`date=${date}`);
-      if (location) params.push(`location=${encodeURIComponent(location)}`);
-      if (category) params.push(`category_id=${category}`);
-      
-      url += params.join('&');
-
-      fetch(url)
-        .then(res => res.json())
-        .then(data => {
-          const container = document.getElementById('results');
-          container.innerHTML = "";
-          if (data.length === 0) {
-            container.innerHTML = "<p>No events found.</p>";
-            return;
-          }
-          data.forEach(ev => {
-            const div = document.createElement('div');
-            div.className = "event-card";
-            
-            // 格式化日期为英文格式 (MM/DD/YYYY, hh:mm AM/PM)
-            const eventDate = new Date(ev.event_date);
-            const dateOptions = {
-              month: '2-digit',
-              day: '2-digit',
-              year: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-              hour12: true,
-              timeZone: 'UTC' // 确保时区一致性
-            };
-            const formattedDate = eventDate.toLocaleString('en-US', dateOptions);
-            
-            div.innerHTML = `
-              <h3><a href="/event?event_id=${ev.event_id}">${ev.title}</a></h3>
-              <p class="event-date">📅 ${formattedDate}</p>
-              <p>📍 ${ev.location}</p>
-              <p>🏷️ ${ev.category_name} | Org: ${ev.org_name}</p>
-              <button class="btn" onclick="window.location.href='/event?event_id=${ev.event_id}'">View Details</button>
-            `;
-            container.appendChild(div);
-          });
-        });
-    });
-
-    function clearFilters() {
-      document.getElementById('date').value = "";
-      document.getElementById('location').value = "";
-      document.getElementById('category').value = "";
-      document.getElementById('results').innerHTML = "";
-    }
-  </script>
+  <script src="/js/search.js"></script>
 </body>
 </html>
+    

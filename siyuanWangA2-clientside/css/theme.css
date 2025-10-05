@@ -3,7 +3,7 @@
   max-width: 1300px;      /* 与轮播图一致 */
   margin: 0 auto;         /* 居中 */
   padding: 2rem 3rem;     /* 上下留白更舒适 */
-  background: #fff;       /* 白色背景卡片效果 */
+  background: #dbdada;       /* 白色背景卡片效果 */
   border-radius: 18px;    /* 与轮播图圆角一致 */
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }

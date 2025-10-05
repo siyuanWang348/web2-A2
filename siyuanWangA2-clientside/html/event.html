@@ -4,89 +4,34 @@
   <meta charset="UTF-8">
   <title>Event Details</title>
   <link rel="stylesheet" href="/css/style.css">
+
 </head>
 <body>
+  <!-- 导航栏 -->
   <nav class="navbar">
-    <div class="logo">Charity Events</div>
+    <div class="logo">🌍 Charity Events</div>
     <div class="nav-links">
       <a href="/">Home</a>
       <a href="/search">Search Events</a>
     </div>
   </nav>
 
+  <!-- 主内容区 -->
   <div class="container event-page">
     <h1>📌 Event Details</h1>
 
+    <!-- 手动输入ID调试工具 -->
     <div id="manualIdEntry" class="manual-entry">
       <p><strong>Debug Tool:</strong> If event details don't load automatically, enter event ID manually:</p>
       <input type="number" id="manualId" placeholder="Enter event ID">
       <button class="btn secondary" onclick="loadEventWithId()">Load Event</button>
     </div>
   
+    <!-- 事件详情展示区域 -->
     <div id="eventDetails" class="detail-card"></div>
   </div>
 
-  <script>
-    function loadEventWithId() {
-      const manualId = document.getElementById('manualId').value;
-      if (manualId && !isNaN(manualId)) {
-        loadEventDetails(manualId);
-      } else {
-        alert('Please enter a valid event ID');
-      }
-    }
-
-    function loadEventDetails(eventId) {
-      fetch(`http://localhost:3001/api/events/${eventId}`)
-        .then(res => {
-          if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-          return res.json();
-        })
-        .then(ev => {
-          document.getElementById('manualIdEntry').style.display = 'none';
-          const container = document.getElementById('eventDetails');
-          const progressPercent = ev.charity_goal 
-            ? Math.min(Math.round((ev.current_progress / ev.charity_goal) * 100), 100) 
-            : 0;
-          container.innerHTML = `
-            <div class="event-card">
-              <h2>${ev.title || 'N/A'}</h2>
-              <div class="event-info">
-                <p><strong>Date:</strong> ${ev.event_date ? new Date(ev.event_date).toLocaleString() : 'N/A'}</p>
-                <p><strong>Location:</strong> ${ev.location || 'N/A'}</p>
-                <p><strong>Category:</strong> ${ev.category_name || 'N/A'}</p>
-                <p><strong>Organization:</strong> ${ev.org_name || 'N/A'}</p>
-                <p><strong>Contact:</strong> ${ev.contact_email || 'N/A'}, ${ev.contact_phone || 'N/A'}</p>
-              </div>
-              <p class="desc">${ev.description || 'N/A'}</p>
-              <div class="goal-section">
-                <p><strong>🎯 Goal:</strong> $${ev.charity_goal ?? 'N/A'} | <strong>Progress:</strong> $${ev.current_progress ?? 'N/A'}</p>
-                <div class="progress-bar">
-                  <div class="progress-fill" style="width: ${progressPercent}%"></div>
-                </div>
-              </div>
-              <p><strong>Ticket Price:</strong> $${ev.ticket_price ?? 'N/A'}</p>
-              <button class="btn primary" onclick="alert('Registration feature under development.')">Register</button>
-            </div>
-          `;
-        })
-        .catch(err => {
-          document.getElementById('eventDetails').innerHTML = `<p class="error">Error loading event details.</p>`;
-          console.error("Error:", err);
-        });
-    }
-
-    function getEventId() {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get('event_id');
-    }
-
-    const id = getEventId();
-    if (id) {
-      loadEventDetails(id);
-    } else {
-      document.getElementById('eventDetails').innerHTML = `<p>No valid event ID provided.</p>`;
-    }
-  </script>
+  <!-- 引入事件详情脚本 -->
+  <script src="/js/event.js"></script>
 </body>
 </html>

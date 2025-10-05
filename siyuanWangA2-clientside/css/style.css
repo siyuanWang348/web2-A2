@@ -38,7 +38,7 @@ body {
 }
 
 .nav-links a:hover, .nav-links a.active {
-  border-bottom: 2px solid #2ecc71; /* 绿色强调色 */
+  border-bottom: 2px solid #e6ebe8; 
 }
 
 /* 头部图片 */
@@ -62,6 +62,7 @@ h1, h2 {
   margin: 1.5rem 0;
   border-bottom: 1px solid #d6eaf8; /* 浅蓝下划线 */
   padding-bottom: 0.5rem;
+  text-align: center;
 }
 
 /* 机构信息区域 */
@@ -71,7 +72,7 @@ h1, h2 {
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   margin-bottom: 2rem;
-  border-top: 4px solid #2ecc71; /* 绿色顶部边框 */
+  border-top: 4px solid #76a5d4; /* 绿色顶部边框 */
 }
 
 .org-info p {
@@ -114,7 +115,7 @@ h1, h2 {
 .btn {
   display: inline-block;
   padding: 0.6rem 1.2rem;
-  background-color: #3498db; /* 蓝色按钮 */
+  background-color: #ffc94d; 
   color: white;
   border: none;
   border-radius: 4px;
@@ -126,61 +127,13 @@ h1, h2 {
 }
 
 .btn:hover {
-  background-color: #2980b9; /* 深蓝悬停效果 */
+  background-color:#f7a41b; 
 }
 
-/* 搜索表单样式 */
-.search-form {
-  background-color: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  margin-bottom: 2rem;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-  color: #34495e;
-}
-
-.form-group input, .form-group select {
-  width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-}
-
-.form-buttons {
-  display: flex;
-  gap: 1rem;
-}
-
-.btn-search {
-  background-color: #2ecc71; /* 绿色搜索按钮 */
-}
-
-.btn-search:hover {
-  background-color: #27ae60;
-}
-
-.btn-clear {
-  background-color: #95a5a6; /* 灰色清除按钮 */
-}
-
-.btn-clear:hover {
-  background-color: #7f8c8d;
-}
 
 /* 详情页样式 */
 .detail-card {
-  background-color: white;
+  background-color:  #dddbdb;;
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -201,7 +154,7 @@ h1, h2 {
 
 .progress-fill {
   height: 100%;
-  background-color: #2ecc71; /* 绿色进度条 */
+  background-color: #86eab2; /* 绿色进度条 */
   transition: width 1s ease-in-out;
 }
 
@@ -218,7 +171,7 @@ h1, h2 {
 }
 
 .modal-content {
-  background-color: white;
+  background-color: #555;;
   margin: 15% auto;
   padding: 2rem;
   width: 60%;

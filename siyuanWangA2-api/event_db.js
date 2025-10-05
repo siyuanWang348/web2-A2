@@ -1,18 +1,23 @@
 const mysql = require('mysql2');
 
-const db = mysql.createConnection({
+// 创建数据库连接配置对象
+const connectionConfig = {
   host: 'localhost',
-  user: 'root',          // ← 你的 MySQL 用户名
-  password: 'wsy20030313.',   // ← 你的 MySQL 密码
+  user: 'root',
+  password: 'wsy20030313.',
   database: 'charityevents_db'
-});
+};
 
-db.connect(err => {
-  if (err) {
-    console.error('Database connection failed:', err.stack);
+// 建立数据库连接
+const dbConnection = mysql.createConnection(connectionConfig);
+
+// 处理连接事件
+dbConnection.connect((error) => {
+  if (error) {
+    console.error('数据库连接失败:', error.stack);
     return;
   }
-  console.log('✅ MySQL connected as id ' + db.threadId);
+  console.log(`✅ MySQL 已连接，连接ID: ${dbConnection.threadId}`);
 });
 
-module.exports = db;
+module.exports = dbConnection;

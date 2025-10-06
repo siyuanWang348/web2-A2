@@ -1,6 +1,6 @@
 const mysql = require('mysql2');
 
-// 创建数据库连接配置对象
+// Create a database connection configuration object
 const connectionConfig = {
   host: 'localhost',
   user: 'root',
@@ -8,10 +8,10 @@ const connectionConfig = {
   database: 'charityevents_db'
 };
 
-// 建立数据库连接
+// Establish a database connection
 const dbConnection = mysql.createConnection(connectionConfig);
 
-// 处理连接事件
+// Handle connection events
 dbConnection.connect((error) => {
   if (error) {
     console.error('数据库连接失败:', error.stack);
